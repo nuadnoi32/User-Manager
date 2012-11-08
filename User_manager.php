@@ -3,12 +3,18 @@
 /**
  * User Class
  *
- * @package		---
- * @subpackage	Libraries
- * @category	Users
- * @author		Nuadnoi
- * @link		---
+ * @package			---
+ * @subpackage		Libraries
+ * @category		Users
+ * @author			Nuadnoi
+ * @link			---
  */
+
+/*
+ * Define the table name
+ */
+define('_TABLE_MEMBER_','member');
+define('_USER_ID_','mid');
 
 class User_manager{
 
@@ -16,6 +22,38 @@ class User_manager{
 	
 	public function __construct(){
 		$this->_CI =& get_instance();
+	}
+	
+	/*
+	 * Login function
+	 * 
+	 * function login($arr_credential,$redirect_page)
+	 * 
+	 * @arr_credential		array
+	 * @redirect_page		array
+	 * 
+	 */
+	public function login($arr_credential,$redirect_page){
+		$key = array_keys($arr_credential);
+		$hashpassword = $this->hashPassword($arr_credential[$key[1]], $arr_credential[$key[0]]);
+		$arr_credential[$key[1]] = $hashpassword;
+		
+		if(isset($arr_credential)){
+				if(is_array($arr_credential) && sizeof($arr_credential) !== 0){
+					$query = $this->_CI->db->get_where(_TABLE_MEMBER_,$arr_credential);
+					if($query->num_rows() == 1){
+						$rs = $query->row();
+						$this->_CI->session->set_userdata('ID',$rs->_USER_ID_);
+						redirect(base_url().$redirect_page);
+					}else{
+						show_error('Error occured, Username or Password is incorrect!');
+						exit();
+					}
+				}
+		}else{
+			return FALSE;
+		}
+		
 	}
 	
 	/*
