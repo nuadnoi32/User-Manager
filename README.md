@@ -1,3 +1,5 @@
+## Now I stoped to develop this project but if you want to discuss about CI topic, any topic , Please feel free to ask me :)
+
 User-Manager
 ============
 
